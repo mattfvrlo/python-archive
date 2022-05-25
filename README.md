@@ -7,7 +7,7 @@ Yes my whitespace is lacking. These were mostly rushed.
 TKinter text editor that imports as hex codes and exports normally, effectively making the ugliest working hex code editor.
 
 ## shell.shl
-Custom Context Menu config for (moudey/shell)[https://github.com/moudey/shell] . Still learning it, so heavy WIP.
+Custom Context Menu config for [moudey/shell](https://github.com/moudey/shell). Still learning it, so heavy WIP.
 
 ## edidExport.py
 EDID exporter for Windows machines, built in python and very very rough. It doesn't even work right now!
