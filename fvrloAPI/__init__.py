@@ -1,23 +1,9 @@
-from . import debug
-from . import block
-
-from . import getConcat
-from . import getNewlines
-
-from . import edidGet
-from . import edidOut
-
-from . import regGet
-from . import regOut
-
-def edidPrint():
-    edidOut(edidGet())
-
-def regPrint():
-    regOut(regGet())
-
+import os,sys,importlib
+__name__= 'fvrloAPI'
+__doc__ = 'Saving my fingers by building a library of common codes.'
 __all__ = [
     'debug',
+    'autoDebug',
     'block',
     'getConcat',
     'getNewlines',
@@ -25,18 +11,36 @@ __all__ = [
     'regOut',
     'edidGet',
     'edidOut',
+    'listGen',
+    'colortest',
 ]
-__name__= 'fvrloAPI'
-__doc__ = 'Saving my fingers by building a library of common codes.\n\
-List of commands:\n\
-debug\n\
-block\n\
-getConcat\n\
-getNewlines\n\
-\n\
-edidPrint\n\
-edidGet\n\
-\n\
-regPrint\n\
-regGet\n\
-'
+
+for pkg in __all__:
+    exec(f"from . import {pkg}")
+
+# dependency check for required requirements that I require to be required
+os.system('color')                      # require color
+fvRequired = ['termcolor','numpy']      # require list
+for package in fvRequired:
+    try: importlib.import_module(package)
+    except ImportError:
+        print(f"Missing requirement {x}, autoinstalling...")
+        import subprocess
+        try: subprocess.check_call([sys.executable, "-m", "pip", "install", x])
+        except Exception as e: print(f"Can't install {x}: {e}")
+    finally: globals()[package] = importlib.import_module(package)
+
+block = block()
+
+def edidPrint():
+    edidOut(edidGet())
+
+def regPrint():
+    regOut(regGet())
+
+def colortest():
+    irange = list(range(10))
+    jrange = list(range(30, 38))
+    krange = list(range(40, 48))
+    for i,j,k in irange,jrange,krange:
+        print("%d;%d;%d: \33[%d;%d;%dm Hello, World! \33[m \n" % (i, j, k, i, j, k,) + "\n")
