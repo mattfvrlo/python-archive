@@ -5,12 +5,6 @@ The fabled fvrloAPI, to automate all the silly tasks I need. I don't wanna keep 
 
 ## Included modules:
 ---
-
-edidGet
-edidOut
-regGet
-regOut
-
 ##### debug
 > The famed debug function from debugModule. Print your data the better way!
 
@@ -34,3 +28,6 @@ regOut
 
 ##### regPrint
 > Specially formatted print of regGet's output.
+
+##### colortest/colorama
+> Try out the color capabilities of the terminal, using [Colorama](https://pypi.org/project/colorama/) and some modified color names.
