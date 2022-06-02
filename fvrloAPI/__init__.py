@@ -15,87 +15,115 @@ __all__ = [
 ]
 import os
 import sys
-from colorama import init,Fore,Back,Style,reinit
+import subprocess
 for pkg in __all__:
     exec(f"from . import {pkg}")
 
-os.system('color')
-init(autoreset=True)
-block = block()
 
-cColors = {        # for calling colorama colors
-    'Fore.BLACK'   : 'fBlack',
-    'Fore.RED'     : 'fRed',
-    'Fore.GREEN'   : 'fGreen',
-    'Fore.YELLOW'  : 'fYellow',
-    'Fore.BLUE'    : 'fBlue',
-    'Fore.MAGENTA' : 'fMagenta',
-    'Fore.CYAN'    : 'fCyan',
-    'Fore.WHITE'   : 'fWhite',
-#
-    'Style.DIM'    : 'sDim',
-    'Style.NORMAL' : 'sNormal',
-    'Style.BRIGHT' : 'sBright',
-#
-    'Back.BLACK'   : 'bBlack',
-    'Back.RED'     : 'bRed',
-    'Back.GREEN'   : 'bGreen',
-    'Back.YELLOW'  : 'bYellow',
-    'Back.BLUE'    : 'bBlue',
-    'Back.MAGENTA' : 'bMagenta',
-    'Back.CYAN'    : 'bCyan',
-    'Back.WHITE'   : 'bWhite',
-}
-cColors_list = list(cColors.keys())
-for key in cColors.keys(): exec(f'{cColors.get(key)} = {key}')
+# enablers section
+# (basic things that need to be declared/done on import for it all to work)
+
+os.system('printf ""')  #doing this enables truecolor somehow? hwat
+block = block()
 def edidPrint(): edidOut(edidGet())
 def regPrint(): regOut(regGet())
-def colortest():
-    w = int(os.get_terminal_size()[0] / 4)
-    empty4 = f"{bBlack}{fWhite}{'':<{w}}"
-    # Header
-    print(f"{'':<{w}}{'Foreground':<{w}}{'Background':<{w}}{empty4}")
-    # Black
-    combo = ((fBlack + bWhite),(fWhite + bBlack))
-    print(f"{'BLACK':<{w}}{combo[0]}{'TEXT':<{w}}{combo[1]}{'TEXT':<{w}}{empty4}")
-    # Red
-    combo = ((fRed + bBlack),(fBlack + bRed))
-    print(f"{'RED':<{w}}{combo[0]}{'TEXT':<{w}}{combo[1]}{'TEXT':<{w}}{empty4}")
-    # Green
-    combo = ((fGreen + bBlack),(fBlack + bGreen))
-    print(f"{'GREEN':<{w}}{combo[0]}{'TEXT':<{w}}{combo[1]}{'TEXT':<{w}}{empty4}")
-    # Yellow
-    combo = ((fYellow + bBlack),(fBlack + bYellow))
-    print(f"{'YELLOW':<{w}}{combo[0]}{'TEXT':<{w}}{combo[1]}{'TEXT':<{w}}{empty4}")
-    # Blue
-    combo = ((fBlue + bBlack),(fBlack + bGreen))
-    print(f"{'BLUE':<{w}}{combo[0]}{'TEXT':<{w}}{combo[1]}{'TEXT':<{w}}{empty4}")
-    # Magenta
-    combo = ((fMagenta + bBlack),(fBlack + bMagenta))
-    print(f"{'MAGENTA':<{w}}{combo[0]}{'TEXT':<{w}}{combo[1]}{'TEXT':<{w}}{empty4}")
-    # Cyan
-    combo = ((fCyan + bBlack),(fBlack + bCyan))
-    print(f"{'CYAN':<{w}}{combo[0]}{'TEXT':<{w}}{combo[1]}{'TEXT':<{w}}{empty4}")
-    # White
-    combo = ((fWhite + bBlack),(fBlack + bWhite))
-    print(f"{'WHITE':<{w}}{combo[0]}{'TEXT':<{w}}{combo[1]}{'TEXT':<{w}}{empty4}")
-    print('')
-    print(f"{'DIM:':<{w}}{sDim}{'TEXT':<{w}}{sNormal}{'BRIGHT:':<{w}}{sBright}{'TEXT':<{w}}")
-    print('')
-    print(f'block, {block}, block')
 
-def colorama():
-    # Official Colorama Demo
-    spacer = 9
-    sSpacer = 8
-    styleCycle = f"{sDim}x{block}X{sNormal}x{block}X{sBright}x{block}X"
-    process = f"{fRed}{styleCycle}{fGreen}{styleCycle}{fYellow}{styleCycle}{fBlue}{styleCycle}{fMagenta}{styleCycle}{fCyan}{styleCycle}{fWhite}{styleCycle}"
-    print(f"{'':^{sSpacer}}{fRed}{'red':^{spacer}}{fGreen}{'green':^{spacer}}{fYellow}{'yellow':^{spacer}}{fBlue}{'blue':^{spacer}}{fMagenta}{'magent':^{spacer}}{fCyan}{'cyan':^{spacer}}{fWhite}{'white':^{spacer}}")
-    print(bBlack   + fWhite + f"{'Black':<{sSpacer}}" + process)
-    print(bRed     + fWhite + f"{'Red':<{sSpacer}}" + process)
-    print(bGreen   + fWhite + f"{'Green':<{sSpacer}}" + process)
-    print(bYellow  + fWhite + f"{'Yellow':<{sSpacer}}" + process)
-    print(bBlue    + fWhite + f"{'Blue':<{sSpacer}}" + process)
-    print(bMagenta + fWhite + f"{'Magenta':<{sSpacer}}" + process)
-    print(bCyan    + fWhite + f"{'Cyan':<{sSpacer}}" + process)
-    print(bWhite   + fWhite + f"{'White':<{sSpacer}}" + process)
+def bashDo(command):
+    subprocess.run(str(command))
+
+def bashPrint(args):
+    basher = f"printf \"{str(args)}\""
+    bashDo(basher)
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# define colorings
+def color(fg=0,bg=0):
+    def spef(col,fgbg):
+        def hexr(r,g,b):
+            return str('#' + format(r, '02x') + format(g, '02x') + format(b, '02x'))
+        if fgbg == 'fg':
+            coron = 3
+        elif fgbg == 'bg':
+            coron = 4
+        if type(col) == tuple:
+            col = hexr(col[0],col[1],col[2])
+        col = col.replace('#','')
+        pixels,dPix = [(col[0] + col[1]),(col[2] + col[3]),(col[4] + col[5])],[]
+        for x in pixels: dPix.append(str(int(x,16)))
+        return f"\033[{coron}8;2;{dPix[0]};{dPix[1]};{dPix[2]}m"
+    if bg != 'fg':
+        if bg != 'bg':
+            out = spef(fg,'fg') + spef(bg,'bg')
+    if bg == 'fg': out = spef(fg,'fg')
+    if bg == 'bg': out = spef(fg,'bg')
+    return out
+
+cBold = '\033[1m'
+cDim = '\033[2m'
+cUnderline = '\033[4m'
+cInvert = '\033[7m'
+cRst = '\033[0m'
+
+
+
+
+
+
+'''
+txt = "Bongos"
+dob1 = 200
+dob2 = 100
+dob3 = 50
+basher = f"printf \"\033[48;2;{dob1};{dob2};{dob3}m{txt}\""
+os.system(basher)
+'''
+bashPrint(f"Both hex:   {color('#abcdef','#123456')}XXXX\033[0m\n")
+
+bashPrint('donkahonka\n')
+bashPrint("donkahonka2\n")
+
+
+def trutest():
+    '''
+    print(cRst)
+    print("Both hex:   " + color('#abcdef','#123456') + 'XXXX' + '\033[0m')
+    print("Both tuple: " + color((0,0,0),(255,255,255)) + 'XXXX' + '\033[0m')
+    print("FG Set:     " + color('#887766','fg') + 'XXXX' + '\033[0m')
+    print("BG Set:     " + color('#887766','bg') + 'XXXX' + '\033[0m')
+    print(cBold + 'Bold-ified!' + cRst)
+    print(cDim + 'Dimmed!' + cRst)
+    print(cUnderline + 'Underlined!' + cRst)
+    print(cInvert + 'Inverted!' + cRst)
+    '''
+    
+    xpr = ''
+    ranger = 32
+    ranger2 = 8
+    '''
+    for x in range(ranger):
+        for y in range(ranger):
+            for z in range(ranger):
+                xprc = format(x*ranger2, '02x') + format(y*ranger2, '02x') + format(z*ranger2, '02x')
+                xpr = xpr + color(str(xprc),'bg') + '.'
+    getNewlines(xpr,80)
+    bashPrint(xpr + cRst)
+    '''
+    xpr = ''
+    for x in range(256):
+        xpr = xpr + f"\033[48;2;{x};{x};{x}m" + 'x'
+    getNewlines(xpr,80)
+    bashPrint(xpr + '\n')
