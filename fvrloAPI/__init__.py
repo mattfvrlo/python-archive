@@ -23,27 +23,10 @@ for pkg in __all__:
 # enablers section
 # (basic things that need to be declared/done on import for it all to work)
 
-os.system('printf ""')  #doing this enables truecolor somehow? hwat
+#os.system('printf ""')  #doing this enables truecolor somehow? hwat
 block = block()
 def edidPrint(): edidOut(edidGet())
 def regPrint(): regOut(regGet())
-
-def bashDo(command):
-    subprocess.run(str(command))
-
-def bashPrint(args):
-    basher = f"printf \"{str(args)}\""
-    bashDo(basher)
-    
-
-
-
-
-
-
-
-
-
 
 
 
@@ -52,9 +35,9 @@ def bashPrint(args):
 
 # define colorings
 def color(fg=0,bg=0):
+    def hexr(r,g,b):
+        return str('#' + format(r, '02x') + format(g, '02x') + format(b, '02x'))
     def spef(col,fgbg):
-        def hexr(r,g,b):
-            return str('#' + format(r, '02x') + format(g, '02x') + format(b, '02x'))
         if fgbg == 'fg':
             coron = 3
         elif fgbg == 'bg':
@@ -70,6 +53,7 @@ def color(fg=0,bg=0):
             out = spef(fg,'fg') + spef(bg,'bg')
     if bg == 'fg': out = spef(fg,'fg')
     if bg == 'bg': out = spef(fg,'bg')
+    if bg == 'hex': out = hexr(fg[0],fg[1],fg[2])
     return out
 
 cBold = '\033[1m'
@@ -77,28 +61,25 @@ cDim = '\033[2m'
 cUnderline = '\033[4m'
 cInvert = '\033[7m'
 cRst = '\033[0m'
+cRstn = '\033[0m\n'
 
 
 
 
+def bashDo(command):
+    subprocess.run(str(command))
 
+def bashPrint(args):
+    basher = f"echo \"{str(args)}\""
+    bashDo(basher)
 
-'''
-txt = "Bongos"
-dob1 = 200
-dob2 = 100
-dob3 = 50
-basher = f"printf \"\033[48;2;{dob1};{dob2};{dob3}m{txt}\""
-os.system(basher)
-'''
-bashPrint(f"Both hex:   {color('#abcdef','#123456')}XXXX\033[0m\n")
+def bashPrintn(args):
+    basher = f"echo -ne \"{str(args)}\""
+    bashDo(basher)
 
-bashPrint('donkahonka\n')
-bashPrint("donkahonka2\n")
 
 
 def trutest():
-    '''
     print(cRst)
     print("Both hex:   " + color('#abcdef','#123456') + 'XXXX' + '\033[0m')
     print("Both tuple: " + color((0,0,0),(255,255,255)) + 'XXXX' + '\033[0m')
@@ -108,7 +89,28 @@ def trutest():
     print(cDim + 'Dimmed!' + cRst)
     print(cUnderline + 'Underlined!' + cRst)
     print(cInvert + 'Inverted!' + cRst)
-    '''
+    
+    
+    
+def trutest2():
+    txt,dob1,dob2 = "Bongos",255,0
+    #print("{}{}{}".format(color((dob1,dob2,dob2),(0,0,0)),txt,cRst))
+    #print("{}{}{}".format(color((dob2,dob1,dob2),(0,0,0)),txt,cRst))
+    #print("{}{}{}".format(color((dob2,dob2,dob1),(0,0,0)),txt,cRst))
+    
+    
+    
+    listout = []
+    for x in range(255):
+        #print(f"\033[38;2;{x};{x};{x}mX")
+        print(f"\x1b[38;2;{x};{x};{x}mX")
+        #bashPrint(f"printf '\x1b[38;2;%s;%s;%smX' ${x} ${x} ${x}")
+    
+    print('\n')
+    print('+')
+    print('+')
+    bashPrint(f"Both hex:   {color('#abcdef','#123456')}XXXX{cRstn}")
+    bashPrint('donkahonka\n')
     
     xpr = ''
     ranger = 32
@@ -127,3 +129,12 @@ def trutest():
         xpr = xpr + f"\033[48;2;{x};{x};{x}m" + 'x'
     getNewlines(xpr,80)
     bashPrint(xpr + '\n')
+    
+    
+    
+			
+			
+    
+    
+    for x in range(255):
+        subprocess.run(f"echo -ne \"\033[38;2;${x};${x};${x}m{x}\"")

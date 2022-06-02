@@ -1,6 +1,6 @@
 #!/bin/bash
 # Based on: https://gist.github.com/XVilka/8346728 and https://unix.stackexchange.com/a/404415/395213
-printf ""
+
 awk -v term_cols="${width:-$(tput cols || echo 80)}" -v term_lines="${height:-1}" 'BEGIN{
     s="/\\";
     total_cols=term_cols*term_lines;
